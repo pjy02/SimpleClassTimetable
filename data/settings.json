@@ -1,0 +1,7 @@
+{
+  "semester_name": "示例学期",
+  "first_monday": "2024-09-02",
+  "day_start": "08:00",
+  "day_end": "20:00",
+  "slot_interval": 30
+}

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple Class Timetable</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">📅</span>
+      <div>
+        <h1>Simple Class Timetable</h1>
+        <p id="semester-name" class="subtitle">加载中...</p>
+      </div>
+    </div>
+    <div class="top-actions">
+      <button id="open-settings" class="secondary">学期/时间设置</button>
+      <button id="add-course" class="primary">新增课程</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="controls">
+      <div class="week-control">
+        <button id="prev-week">上一周</button>
+        <div class="week-info">
+          <label for="week-number">周次</label>
+          <input type="number" id="week-number" min="1" value="1">
+        </div>
+        <button id="next-week">下一周</button>
+        <span id="current-week" class="chip">当前周计算中...</span>
+      </div>
+    </section>
+
+    <section class="content">
+      <div class="timetable-card">
+        <div class="card-header">
+          <h2>周视图</h2>
+          <span id="time-range" class="muted"></span>
+        </div>
+        <div id="timetable" class="timetable"></div>
+      </div>
+
+      <div class="course-list-card">
+        <div class="card-header">
+          <h2>课程列表</h2>
+          <button id="export-data" class="secondary">导出 JSON</button>
+          <label class="import-label secondary">导入 JSON
+            <input type="file" id="import-file" accept="application/json" hidden>
+          </label>
+        </div>
+        <table class="course-table">
+          <thead>
+            <tr>
+              <th>课程名</th>
+              <th>教师</th>
+              <th>地点</th>
+              <th>周几</th>
+              <th>时间</th>
+              <th>周次</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody id="course-rows"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <div id="course-modal" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="course-modal-title">新增课程</h3>
+        <button class="icon" id="close-course-modal">✕</button>
+      </div>
+      <form id="course-form" class="form-grid">
+        <input type="hidden" id="course-id">
+        <label>课程名<input required id="course-title" type="text" placeholder="如 高等数学"></label>
+        <label>教师<input id="course-teacher" type="text" placeholder="如 张老师"></label>
+        <label>地点<input id="course-location" type="text" placeholder="如 教学楼 A203"></label>
+        <label>周几
+          <select id="course-weekday" required>
+            <option value="">请选择</option>
+            <option value="1">周一</option>
+            <option value="2">周二</option>
+            <option value="3">周三</option>
+            <option value="4">周四</option>
+            <option value="5">周五</option>
+            <option value="6">周六</option>
+            <option value="7">周日</option>
+          </select>
+        </label>
+        <label>开始时间<input required id="course-start" type="time" value="08:00"></label>
+        <label>结束时间<input required id="course-end" type="time" value="09:35"></label>
+        <label>周次（用逗号分隔，如 1,2,3）<input required id="course-weeks" type="text" placeholder="1,2,3"></label>
+        <label>颜色<input id="course-color" type="color" value="#4f8cff"></label>
+        <label>备注<textarea id="course-remark" rows="2" placeholder="选填"></textarea></label>
+        <div class="form-actions">
+          <button type="button" class="secondary" id="cancel-course">取消</button>
+          <button type="submit" class="primary">保存</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="settings-modal" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>学期与时间设置</h3>
+        <button class="icon" id="close-settings-modal">✕</button>
+      </div>
+      <form id="settings-form" class="form-grid">
+        <label>学期名称<input id="semester-input" type="text" required></label>
+        <label>首周周一日期<input id="first-monday" type="date" required></label>
+        <label>每日开始时间<input id="day-start" type="time" required></label>
+        <label>每日结束时间<input id="day-end" type="time" required></label>
+        <label>时间粒度（分钟）
+          <select id="slot-interval">
+            <option value="15">15</option>
+            <option value="20">20</option>
+            <option value="30">30</option>
+            <option value="45">45</option>
+            <option value="60">60</option>
+          </select>
+        </label>
+        <div class="form-actions">
+          <button type="button" class="secondary" id="cancel-settings">取消</button>
+          <button type="submit" class="primary">保存</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <template id="course-row-template">
+    <tr>
+      <td class="title"></td>
+      <td class="teacher"></td>
+      <td class="location"></td>
+      <td class="weekday"></td>
+      <td class="time"></td>
+      <td class="weeks"></td>
+      <td class="actions">
+        <button class="text" data-action="edit">编辑</button>
+        <button class="text danger" data-action="delete">删除</button>
+      </td>
+    </tr>
+  </template>
+
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
